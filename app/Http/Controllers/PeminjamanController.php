@@ -6,6 +6,7 @@ use App\Models\Peminjaman;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Gate;
 
 class PeminjamanController extends Controller
 {
@@ -21,9 +22,11 @@ class PeminjamanController extends Controller
     {
         $peminjaman = Peminjaman::findOrFail($id);
 
+        Gate::authorize('view', $peminjaman);
+
         return view('peminjaman.show', ['peminjaman' => $peminjaman]);
     }
-    
+
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
