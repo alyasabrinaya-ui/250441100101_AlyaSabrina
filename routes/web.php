@@ -34,6 +34,14 @@ Route::middleware('auth')->group(function () {
     Route::view('/petugas/dashboard', 'dashboard.petugas')
         ->middleware('permission:akses dashboard petugas')->name('petugas.dashboard');
 
+    Route::middleware('can:kelola-buku')->group(function () {
+    Route::get('/buku/create', [BukuController::class, 'create'])->name('buku.create');
+    Route::post('/buku', [BukuController::class, 'store'])->name('buku.store');
+    Route::get('/buku/{buku}/edit', [BukuController::class, 'edit'])->name('buku.edit');
+    Route::put('/buku/{buku}', [BukuController::class, 'update'])->name('buku.update');
+    Route::delete('/buku/{buku}', [BukuController::class, 'destroy'])->name('buku.destroy');
+});
+
     Route::middleware('permission:lihat daftar buku')->group(function () {
         Route::get('/buku', [BukuController::class, 'index'])->name('buku.index');
         Route::get('/buku/{id}', [BukuController::class, 'show'])->name('buku.show');
@@ -41,7 +49,7 @@ Route::middleware('auth')->group(function () {
 
     // === Soal 1: sengaja dibuat rentan ===
     Route::get('/buku-cari', [BukuController::class, 'cari']);
-    Route::delete('/buku/{buku}', [BukuController::class, 'destroy'])->name('buku.destroy');
+  
     Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show']);
 
     Route::get('/profile', [ProfileController::class, 'edit'])

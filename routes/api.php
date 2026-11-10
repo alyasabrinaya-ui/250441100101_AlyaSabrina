@@ -18,5 +18,5 @@ Route::middleware(['web', 'auth'])->group(function () {
 
   
     Route::apiResource('buku', BukuController::class)->only(['store', 'update', 'destroy'])
-        ->middleware('permission:kelola data buku')->names('api.buku');
+        ->middleware('can:kelola-buku')->names('api.buku');
 });

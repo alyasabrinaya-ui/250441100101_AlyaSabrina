@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBukuRequest;
+use App\Http\Requests\UpdateBukuRequest;
 use App\Models\Buku;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
@@ -39,7 +41,36 @@ class BukuController extends Controller
         ], $buku ? 200 : 404);
     }
 
-    // A2 (rentan): nilai judul digabung langsung ke string SQL
+    public function create()
+    {
+        return view('buku.form', [
+            'buku'           => new Buku(),
+            'daftarKategori' => Kategori::orderBy('nama')->get(['id', 'nama']),
+        ]);
+    }
+
+    public function store(StoreBukuRequest $request)
+    {
+        Buku::create($request->validated());
+
+        return redirect()->route('buku.index')->with('sukses', 'Buku berhasil ditambahkan.');
+    }
+
+    public function edit(Buku $buku)
+    {
+        return view('buku.form', [
+            'buku'           => $buku,
+            'daftarKategori' => Kategori::orderBy('nama')->get(['id', 'nama']),
+        ]);
+    }
+
+    public function update(UpdateBukuRequest $request, Buku $buku)
+    {
+        $buku->update($request->validated());
+
+        return redirect()->route('buku.index')->with('sukses', 'Buku berhasil diperbarui.');
+    }
+
     public function cari(Request $request)
     {
         $judul = $request->query('judul');
@@ -49,7 +80,6 @@ class BukuController extends Controller
         return response()->json($hasil);
     }
 
-    // A3 (rentan): dipanggil lewat GET tanpa token CSRF
     public function destroy(Buku $buku)
     {
         if ($buku->peminjamans()->exists()) {
