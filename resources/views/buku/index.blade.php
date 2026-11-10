@@ -39,11 +39,11 @@
         <h2>Buku Terbaru</h2>
         <ul>
             @foreach ($bukuTerbaru as $b)
-                <li>{!! $b->judul !!}</li>
+                <li>{{ $b->judul }}</li>
             @endforeach
         </ul>
     </section>
-    
+
     <section class="panel">
         @can('kelola data buku')
          
@@ -83,6 +83,10 @@
     </section>
     @endcan
 
+    <form id="form-hapus" method="POST" hidden>
+        @csrf
+        @method('DELETE')
+    </form>
     <script>
                const API_URL       = @json(url('/api/buku'));
         const BISA_KELOLA   = @json(auth()->user()->can('kelola data buku'));
@@ -305,29 +309,14 @@
         });
 
        
-        async function hapusBuku(buku) {
+        function hapusBuku(buku) {
             if (!confirm(`Yakin ingin menghapus buku "${buku.judul}"?`)) {
                 return;
             }
 
-            try {
-                const response = await fetch(`${API_URL}/${buku.id}`, {
-                    method: 'DELETE',
-                    headers: HEADER_ACCEPT,
-                });
-
-                if (!response.ok) {
-                    throw new Error(await ambilPesanError(response));
-                }
-
-                if (idDiubah === buku.id) {
-                    resetForm();
-                }
-                tampilPesan('Buku berhasil dihapus.', 'sukses');
-                await muatBuku(halamanSekarang);
-            } catch (err) {
-                tampilPesan(pesanDariError(err), 'gagal');
-            }
+            const formHapus = document.getElementById('form-hapus');
+            formHapus.action = `/buku/${buku.id}`;
+            formHapus.submit();
         }
 
       

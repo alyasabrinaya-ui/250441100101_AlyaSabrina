@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
 
     // === Soal 1: sengaja dibuat rentan ===
     Route::get('/buku-cari', [BukuController::class, 'cari']);
-    Route::get('/buku/{buku}/hapus', [BukuController::class, 'destroy']);
+    Route::delete('/buku/{buku}', [BukuController::class, 'destroy'])->name('buku.destroy');
     Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show']);
 
     Route::get('/profile', [ProfileController::class, 'edit'])
