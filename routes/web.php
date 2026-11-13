@@ -95,3 +95,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+Route::get('/uji-error', function () {
+    throw new \RuntimeException('Uji error 25044110101');
+});

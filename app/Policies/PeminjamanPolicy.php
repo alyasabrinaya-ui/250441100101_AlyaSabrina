@@ -15,4 +15,4 @@ class PeminjamanPolicy
 
         return $peminjaman->anggota?->user_id === $user->id;
     }
-}
+}  
